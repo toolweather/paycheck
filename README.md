@@ -112,7 +112,7 @@ Glama stdio entry, after `npm run build`:
 node dist/stdio.js
 ```
 
-The stdio process speaks MCP Content-Length framing. Its quota and keys are in memory. Production persistence is the Worker.
+The stdio process speaks newline-delimited JSON-RPC on stdout (Glama's mcp-proxy). Stdin also accepts Content-Length frames. Its quota and keys are in memory. Production persistence is the Worker.
 
 ## Local
 
