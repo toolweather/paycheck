@@ -1,7 +1,7 @@
 # PayCheck — Cloudflare Worker + D1 + static public/.
 # PAY_TO and BUNDLE_PROXY_SECRET are Worker secrets. Set them with
 # `wrangler secret put`. Never put them in [vars] or in git.
-# database_id below is a placeholder. Replace it after `wrangler d1 create paycheck`.
+# database_id is the production D1 database created with `wrangler d1 create paycheck`.
 
 name = "paycheck"
 main = "src/index.ts"
@@ -15,5 +15,5 @@ run_worker_first = false
 [[d1_databases]]
 binding = "DB"
 database_name = "paycheck"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "28072b38-1405-4e83-91aa-6c16a1a6e580"
 migrations_dir = "migrations"
