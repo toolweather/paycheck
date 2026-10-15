@@ -1,5 +1,7 @@
 # PayCheck
 
+[![Toolweather](https://toolweather.toolweather.workers.dev/badge/io.github.toolweather/paycheck.svg)](https://toolweather.pages.dev/servers/io.github.toolweather--paycheck/)
+
 [![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/toolweather/paycheck)
 
 PayCheck scores whether a domain, an https URL, or a `0x` wallet is safe to pay **before** an autonomous agent sends money.
