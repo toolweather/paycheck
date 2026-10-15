@@ -294,7 +294,7 @@ describe("MCP", () => {
 describe("repo hygiene", () => {
   it("does not commit PAY_TO or the bundle secret", () => {
     const toml = readFileSync("wrangler.toml", "utf8");
-    expect(toml).toContain("00000000-0000-0000-0000-000000000000");
+    expect(toml).toContain('database_id = "28072b38-1405-4e83-91aa-6c16a1a6e580"');
     expect(toml).not.toMatch(/PAY_TO\s*=\s*"/);
     expect(toml).not.toMatch(/BUNDLE_PROXY_SECRET\s*=\s*"/);
     expect(toml).not.toMatch(/^\[vars\]/m);
