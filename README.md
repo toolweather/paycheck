@@ -18,7 +18,7 @@ Do not use PayCheck to send money, to hold keys, or to overturn a `block` by ask
 
 ## Scoring (policy v1)
 
-Full rules, the allowlist, and the penalty table: [`GET /v1/policy`](http://127.0.0.1:8791/v1/policy) on a local server, or `/v1/policy` in production.
+Full rules, the allowlist, and the penalty table: [`GET /v1/policy`](https://paycheck.toolweather.workers.dev/v1/policy) (or `http://127.0.0.1:8791/v1/policy` locally).
 
 Start at 100 and subtract penalties. `policy_version` is `"1"`.
 
@@ -100,7 +100,7 @@ curl -s -X POST http://127.0.0.1:8791/v1/check \
   "mcpServers": {
     "paycheck": {
       "type": "http",
-      "url": "https://YOUR-WORKER.workers.dev/mcp"
+      "url": "https://paycheck.toolweather.workers.dev/mcp"
     }
   }
 }
@@ -135,11 +135,9 @@ Optional `.dev.vars` (gitignored; see `.dev.vars.example`):
 
 ## Deploy
 
-`database_id` in `wrangler.toml` is a placeholder. `PAY_TO` and `BUNDLE_PROXY_SECRET` are Worker secrets. Do not put them in `[vars]` or in git.
+Production lives at [paycheck.toolweather.workers.dev](https://paycheck.toolweather.workers.dev). `wrangler.toml` already has the production D1 `database_id`. `PAY_TO` and `BUNDLE_PROXY_SECRET` are Worker secrets. Do not put them in `[vars]` or in git.
 
 ```bash
-npx wrangler d1 create paycheck
-# Paste the printed database_id into wrangler.toml.
 npx wrangler d1 migrations apply paycheck --remote
 npx wrangler secret put PAY_TO
 npx wrangler secret put BUNDLE_PROXY_SECRET

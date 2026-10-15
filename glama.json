@@ -1,4 +1,7 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
-  "maintainers": ["toolweather"]
+  "maintainers": [
+    "toolweather"
+  ],
+  "description": "Score merchant domain, https URL, or 0x wallet trust before an agent pays (trusted/unknown/suspicious/block). Does not send payments."
 }

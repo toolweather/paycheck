@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.toolweather/paycheck",
+  "title": "PayCheck",
+  "description": "Score merchant domain, https URL, or 0x wallet trust before an agent pays. Does not send payments.",
+  "repository": {
+    "url": "https://github.com/toolweather/paycheck",
+    "source": "github"
+  },
+  "websiteUrl": "https://paycheck.toolweather.workers.dev",
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://paycheck.toolweather.workers.dev/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Optional Bearer pc_live_\u2026 free key (POST https://paycheck.toolweather.workers.dev/v1/keys) for 1,000 free checks/day; 100/day without one. After the cap, x402 USDC on Base.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
