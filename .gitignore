@@ -1,0 +1,8 @@
+node_modules/
+dist/
+dist-worker/
+.wrangler/
+.dev.vars
+*.log
+agent-tools/
+.DS_Store

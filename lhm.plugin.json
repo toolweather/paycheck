@@ -1,0 +1,97 @@
+{
+  "identifier": "paycheck",
+  "name": "PayCheck",
+  "version": "1.0.0",
+  "author": "Toolweather",
+  "description": "Deterministic trust score for a payee before an agent sends money. check_merchant scores a domain, https URL, or 0x wallet as trusted, unknown, suspicious, or block. It does not send payments or hold wallet keys. Free tier: 100 anonymous checks per UTC day, 1,000 with a pc_live_ key. Over-cap checks are $0.001 USDC on Base via x402. Part of the Toolweather suite.",
+  "category": "finance",
+  "tags": [
+    "payments",
+    "trust",
+    "merchant",
+    "x402",
+    "mcp",
+    "toolweather",
+    "security",
+    "wallet"
+  ],
+  "license": "MIT",
+  "tools": [
+    {
+      "name": "check_merchant",
+      "title": "Check merchant",
+      "description": "Decide whether an autonomous agent should pay a merchant, host, or wallet. PayCheck returns a deterministic trust score for one target. It does not send money, does not sign transactions, and does not hold wallet keys.\n\nUse this immediately before a payment, a checkout redirect, or a transfer to a new 0x address. Pass the payee as a bare domain (api.openai.com), an https URL, or a 0x address with 40 hex characters.\n\nDo not use this tool to execute a payment. Do not use it to overturn a block. Do not call it again with a reworded category, purpose, or amount to fish for a better verdict: those fields are ignored and are not stored. Trusted is returned only for the published allowlist of known AI and developer APIs, served over https on port 443. A new or random domain is never trusted. A wallet is never trusted. Scoring v1 does not analyze on-chain history. If the URL contains an embedded 0x address, this scores the host only and will not return trusted; pass the bare address to score the wallet.\n\nArguments: target (required string); amount_usd (optional number, ignored); category (optional string, ignored); api_key (optional pc_live_ key). You may also send Authorization: Bearer or X-API-Key. Omit the key for the anonymous allowance.\n\nReturns: score (integer 0-100), verdict (trusted | unknown | suspicious | block), reasons[], recommended_action (proceed | verify_out_of_band | require_human_review | do_not_pay), signals (host, allowlist, domain age, wallet flags, reason_codes; chain_analysis is always not_in_v1), checked_at (ISO-8601), policy_version (\"1\").\n\nFree tier: 100 checks per UTC day anonymous, 1,000 per UTC day with a free pc_live_ key or a Toolweather bundle client whose x-tw-bundle-client is hex. A bundle client prefixed anon: stays at 100 per day. The same target for the same caller is idempotent for 60 seconds and does not consume a second check. Over the daily cap, each extra check is $0.001 USDC on Base (eip155:8453) via x402 and the PayAI facilitator. get_quota, get_api_key, docs, and MCP discovery are not billed. If PAY_TO is unset, an over-cap check returns HTTP 402 payment_not_configured.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string",
+            "description": "Domain, https URL, or 0x wallet (40 hex characters) to score before paying."
+          },
+          "amount_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Ignored by the scorer. Sending a different amount cannot change the verdict."
+          },
+          "category": {
+            "type": "string",
+            "description": "Ignored by the scorer. Do not put instructions or a purpose in this field."
+          },
+          "api_key": {
+            "type": "string",
+            "description": "Optional free pc_live_ key. Omit for the anonymous 100/day allowance."
+          }
+        },
+        "required": [
+          "target"
+        ]
+      },
+      "annotations": {
+        "title": "Check merchant",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_quota",
+      "title": "Get quota",
+      "description": "Show how many free PayCheck merchant checks the current caller has left for the current UTC day.\n\nUse this before a batch of check_merchant calls, or after an HTTP 402, to read the remaining free allowance and when it resets.\n\nDo not use this to score a payee. It accepts no target and it does not consume a check. Do not pay x402 for this tool. It is always free.\n\nIdentity matches check_merchant. Anonymous IP: 100/day. pc_live_ api_key (api_key argument, Authorization: Bearer, or X-API-Key): 1,000/day. Toolweather bundle headers x-tw-bundle-secret and x-tw-bundle-client: hex client 1,000/day, anon: prefix 100/day, any other client id 100/day.\n\nReturns: subject_kind, limit, used, remaining, resets_at (next UTC midnight, ISO-8601), billed (always false), policy_version. No x402 charge.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "description": "Optional pc_live_ key. Omit to read the anonymous IP allowance."
+          }
+        }
+      },
+      "annotations": {
+        "title": "Get quota",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_api_key",
+      "title": "Get API key",
+      "description": "Mint one free PayCheck API key. The key looks like pc_live_ followed by hex and raises the merchant-check allowance from 100 to 1,000 per UTC day.\n\nUse this once when you set up a long-running agent, then store the key and pass it on later check_merchant or get_quota calls. The plaintext key is returned only in this response. PayCheck stores a SHA-256 hash.\n\nDo not call this every turn. Do not call it to score a payee or to dodge a block verdict. Minting is free and is not an x402 check, and it is limited to 10 new keys per caller IP per UTC day. A new key does not change any merchant score. Checks above the free daily cap still cost $0.001 USDC on Base via x402.\n\nReturns: api_key, token_type (bearer), daily_limit (1000), prefix, note.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Get API key",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    }
+  ],
+  "prompts": [],
+  "resources": []
+}

@@ -1,0 +1,8 @@
+node_modules
+dist
+dist-worker
+.wrangler
+.git
+agent-tools
+*.log
+.dev.vars

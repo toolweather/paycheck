@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PayCheck — is this payee safe to pay?</title>
+    <meta
+      name="description"
+      content="PayCheck scores a domain, https URL, or 0x wallet before an agent sends money. Deterministic. It does not send payments or hold wallet keys."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #1c1915;
+        --muted: #5c564c;
+        --line: #d9d2c5;
+        --paper: #f6f3ec;
+        --card: #fffdf8;
+        --green: #0f6e56;
+        --green-soft: #e5f4ef;
+        --amber: #8a5a12;
+        --amber-soft: #f8efd8;
+        --red: #8f2d2d;
+        --red-soft: #f8e6e2;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+        color: var(--ink);
+        background: var(--paper);
+        line-height: 1.5;
+      }
+      main { max-width: 880px; margin: 0 auto; padding: 32px 20px 72px; }
+      header p.kicker {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: var(--green);
+        margin: 0 0 8px;
+      }
+      h1 { font-size: clamp(40px, 7vw, 64px); line-height: 0.95; margin: 0 0 12px; font-weight: 600; }
+      h2 { font-size: 28px; margin: 40px 0 8px; }
+      p, li { font-size: 18px; }
+      .lede { font-size: 22px; max-width: 40rem; }
+      .muted { color: var(--muted); font-family: "Segoe UI", system-ui, sans-serif; font-size: 15px; }
+      a { color: var(--green); }
+      code, pre, .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+      pre {
+        background: #221f1a;
+        color: #f4efe4;
+        padding: 16px;
+        overflow: auto;
+        border-radius: 8px;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+      .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+      .card strong { display: block; font-family: "Segoe UI", system-ui, sans-serif; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+      .card.trusted strong { color: var(--green); }
+      .card.unknown strong { color: var(--amber); }
+      .card.block strong { color: var(--red); }
+      table { width: 100%; border-collapse: collapse; font-family: "Segoe UI", system-ui, sans-serif; font-size: 15px; }
+      th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+      th { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+      .note { background: var(--green-soft); border-radius: 10px; padding: 12px 14px; }
+      footer { margin-top: 48px; }
+      @media (max-width: 720px) {
+        .grid { grid-template-columns: 1fr; }
+        p, li { font-size: 17px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="kicker">Toolweather suite</p>
+        <h1>PayCheck</h1>
+        <p class="lede">Ask whether a merchant, URL, or wallet is safe to pay before an agent sends money.</p>
+        <p class="muted">Deterministic score. No payment execution. No wallet keys. Policy version 1.</p>
+      </header>
+
+      <section class="grid" aria-label="Example verdicts">
+        <article class="card trusted">
+          <strong>Trusted · 100</strong>
+          <p><code>https://api.openai.com</code> is on the allowlist of known AI and developer APIs.</p>
+        </article>
+        <article class="card unknown">
+          <strong>Unknown or suspicious</strong>
+          <p>A new or random domain is never trusted, even if you reword the purpose.</p>
+        </article>
+        <article class="card block">
+          <strong>Block</strong>
+          <p><code>http://1.2.3.4</code>, localhost, burn addresses, and typosquats are refused.</p>
+        </article>
+      </section>
+
+      <h2>What it checks</h2>
+      <p>Pass a domain, an https URL, or a <code>0x</code> wallet. PayCheck returns a score from 0 to 100, a verdict (<code>trusted</code>, <code>unknown</code>, <code>suspicious</code>, or <code>block</code>), reasons, and a recommended action.</p>
+      <p>Trusted is reserved for the published allowlist over https on port 443. Wallets are never trusted in v1: there is no chain analysis. Domain age comes from public RDAP. If that lookup fails, the age is unknown. PayCheck does not invent one.</p>
+      <div class="note">
+        <p><code>amount_usd</code>, <code>category</code>, and any purpose text are discarded. They do not change the score and they are not stored.</p>
+      </div>
+
+      <h2>Free tier</h2>
+      <table>
+        <thead>
+          <tr><th>Caller</th><th>Checks / UTC day</th><th>Price</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Anonymous IP</td><td>100</td><td>Free</td></tr>
+          <tr><td>Free <code>pc_live_…</code> key</td><td>1,000</td><td>Free</td></tr>
+          <tr><td>Bundle hex client</td><td>1,000</td><td>Free</td></tr>
+          <tr><td>Bundle <code>anon:</code> client</td><td>100</td><td>Free</td></tr>
+          <tr><td>Over the cap</td><td>each extra check</td><td>$0.001 USDC on Base</td></tr>
+        </tbody>
+      </table>
+      <p class="muted">Quota, key minting, docs, and MCP discovery are not billed. The same target is free to repeat for 60 seconds. If <code>PAY_TO</code> is unset, over-cap calls return HTTP 402 <code>payment_not_configured</code>.</p>
+
+      <h2>REST</h2>
+      <pre>curl -s -X POST "$ORIGIN/v1/check" \
+  -H 'content-type: application/json' \
+  -d '{"target":"https://api.openai.com"}'
+
+curl -s -X POST "$ORIGIN/v1/keys"
+curl -s "$ORIGIN/v1/quota"
+curl -s "$ORIGIN/v1/policy"</pre>
+
+      <h2>MCP</h2>
+      <p>Streamable HTTP on <code>POST /mcp</code>. Protocols <code>2025-06-18</code> and <code>2025-03-26</code>. Tools: <code>check_merchant</code>, <code>get_quota</code>, <code>get_api_key</code>.</p>
+      <pre>{
+  "mcpServers": {
+    "paycheck": {
+      "type": "http",
+      "url": "https://YOUR-WORKER.workers.dev/mcp"
+    }
+  }
+}</pre>
+      <p class="muted">Call <code>get_api_key</code> once and store the key. Do not call it every turn. Glama can also launch the stdio build: <code>node dist/stdio.js</code>.</p>
+
+      <h2>What it will not do</h2>
+      <ul>
+        <li>Send a payment or sign a transaction.</li>
+        <li>Hold a wallet key. <code>PAY_TO</code> only receives the optional x402 micropayment for an over-cap check.</li>
+        <li>Upgrade a verdict because the prompt asked nicely.</li>
+      </ul>
+
+      <footer>
+        <p class="muted">Part of the Toolweather suite, with Toolweather MCP health, Upstream, and SpendGate. Scoring rules live at <a href="/v1/policy">/v1/policy</a>. Machine docs: <a href="/llms.txt">/llms.txt</a>, <a href="/openapi.json">/openapi.json</a>.</p>
+      </footer>
+    </main>
+  </body>
+</html>

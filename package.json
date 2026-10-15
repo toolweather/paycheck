@@ -1,0 +1,54 @@
+{
+  "name": "paycheck",
+  "version": "1.0.0",
+  "description": "PayCheck scores whether a domain, https URL, or 0x wallet is safe to pay before an agent sends money. Deterministic MCP and REST API in the Toolweather suite. It does not send payments or hold wallet keys.",
+  "license": "MIT",
+  "type": "module",
+  "author": "Toolweather",
+  "keywords": [
+    "mcp",
+    "paycheck",
+    "toolweather",
+    "x402",
+    "payments",
+    "trust",
+    "merchant",
+    "cloudflare-workers"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "dist/stdio.js",
+  "bin": {
+    "paycheck-mcp": "dist/stdio.js"
+  },
+  "files": [
+    "dist/stdio.js",
+    "README.md",
+    "LICENSE",
+    "lhm.plugin.json",
+    "glama.json"
+  ],
+  "scripts": {
+    "dev": "wrangler dev --port 8791 --ip 0.0.0.0",
+    "deploy": "wrangler deploy",
+    "dry-run": "wrangler deploy --dry-run --outdir dist-worker",
+    "build": "esbuild src/stdio.ts --bundle --platform=node --format=esm --outfile=dist/stdio.js --banner:js=\"#!/usr/bin/env node\"",
+    "migrate:local": "wrangler d1 migrations apply paycheck --local",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check": "tsc --noEmit && vitest run",
+    "manifest": "esbuild scripts/write-manifest.ts --bundle --platform=node --format=esm --outfile=/tmp/paycheck-manifest.mjs && node /tmp/paycheck-manifest.mjs",
+    "start": "node dist/stdio.js"
+  },
+  "dependencies": {
+    "hono": "^4.8.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261006.1",
+    "esbuild": "^0.25.10",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.42.0"
+  }
+}
