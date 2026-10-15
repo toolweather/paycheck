@@ -1,5 +1,7 @@
 # PayCheck
 
+[![Listed on mcpservers.org](https://mcpservers.org/badge.svg)](https://mcpservers.org/servers/toolweather/paycheck)
+
 PayCheck scores whether a domain, an https URL, or a `0x` wallet is safe to pay **before** an autonomous agent sends money.
 
 It is part of the Toolweather suite, in the same family as Toolweather MCP health, Upstream, and SpendGate. SpendGate is for spend limits. PayCheck is only the payee trust check. It does not send payments, does not sign transactions, and does not hold wallet keys. A Toolweather bundle can front this API later with `x-tw-bundle-secret` and `x-tw-bundle-client`.
