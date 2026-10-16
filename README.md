@@ -104,7 +104,7 @@ curl -s -X POST http://127.0.0.1:8791/v1/check \
   "mcpServers": {
     "paycheck": {
       "type": "http",
-      "url": "https://paycheck.toolweather.workers.dev/mcp"
+      "url": "https://paycheck.toolweather.workers.dev/mcp?src=site"
     }
   }
 }
